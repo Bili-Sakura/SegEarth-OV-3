@@ -73,6 +73,46 @@ For 6) - 8). please refer to [dataset_prepare.md](dataset_prepare.md) for datase
 
 The custom inference pipeline downloads and caches `facebook/sam3` via `transformers` on first use. You can also point `model=` at a local snapshot of that Hub repo. A separate `sam3.pt` / BPE file is not required.
 
+## Hugging Face Hub (standard custom pipeline)
+
+The publishable Transformers snapshot is [`hub/`](hub/). That folder is laid out the official way ([Adding a new pipeline](https://huggingface.co/docs/transformers/en/add_new_pipeline)):
+
+```
+hub/pipeline.py   # self-contained transformers.Pipeline (no package imports)
+hub/config.json   # Sam3 config + custom_pipelines + default text_prompts
+hub/README.md     # model card
+```
+
+`config.json` registers the task as:
+
+```json
+"custom_pipelines": {
+  "segearth-ov3-segmentation": {
+    "impl": "pipeline.SegEarthOV3Pipeline",
+    "pt": ["AutoModel"],
+    "type": "image"
+  }
+}
+```
+
+After you upload that snapshot to a model repo (`python scripts/push_to_hub.py --repo-id YOUR_NAMESPACE/SegEarth-OV-3 --code-only` or `--with-weights`):
+
+```python
+from transformers import pipeline
+
+pipe = pipeline(
+    "segearth-ov3-segmentation",
+    model="YOUR_NAMESPACE/SegEarth-OV-3",
+    trust_remote_code=True,
+    text_prompts=["background", "building", "road"],
+)
+result = pipe("image.tif")
+```
+
+`--with-weights` is the official `Pipeline.push_to_hub` path (copies `pipeline.py` next to the SAM 3 checkpoint). `--code-only` uploads just the three files above; pair them with `facebook/sam3` as shown in `hub/README.md`. Pin `revision=` to a commit you have reviewed when using `trust_remote_code=True`. SAM 3 weights stay under the [`facebook/sam3`](https://huggingface.co/facebook/sam3) license.
+
+This GitHub checkout uses the same `hub/pipeline.py` through `from segearthov3 import pipeline`.
+
 ## Quick Inference
 
 The inference API takes a **list of text prompts** (one entry per class). Comma-separated strings or nested lists are synonym groups for the same class — they are queried separately and max-pooled back to one label.

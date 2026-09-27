@@ -1,4 +1,11 @@
-"""Quick inference demo using the native transformers SAM 3 pipeline."""
+"""Quick inference demo using the native transformers SAM 3 pipeline.
+
+The published Hub API is the same class from hub/pipeline.py:
+
+    from transformers import pipeline
+    pipe = pipeline("segearth-ov3-segmentation", model="YOUR_NAMESPACE/SegEarth-OV-3",
+                    trust_remote_code=True, text_prompts=[...])
+"""
 
 from pathlib import Path
 
