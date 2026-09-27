@@ -235,6 +235,8 @@ def register_pipeline() -> None:
     except ImportError:
         return
 
+    if "segearth-ov3-segmentation" in getattr(PIPELINE_REGISTRY, "supported_tasks", {}):
+        return
     try:
         PIPELINE_REGISTRY.register_pipeline(
             "segearth-ov3-segmentation",
@@ -244,7 +246,7 @@ def register_pipeline() -> None:
             type="image",
         )
     except Exception:
-        # Already registered in this process, or registry API changed.
+        # Registry API changed or registration is unsupported in this build.
         return
 
 
