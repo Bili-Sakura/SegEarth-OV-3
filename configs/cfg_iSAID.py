@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import ISAID
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_iSAID.txt',
+    text_prompts=ISAID,
     prob_thd=0.5,
     confidence_threshold=0.4,
 )

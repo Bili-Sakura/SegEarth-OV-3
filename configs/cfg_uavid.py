@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import UAVID
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_uavid.txt',
+    text_prompts=UAVID,
     prob_thd=0.3,
     confidence_threshold=0.3,
 )

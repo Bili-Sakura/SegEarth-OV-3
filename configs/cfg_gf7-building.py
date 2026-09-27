@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import GF7_BUILDING
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_gf7-building.txt',
+    text_prompts=GF7_BUILDING,
     prob_thd=0.5,
     confidence_threshold=0.1,
 )

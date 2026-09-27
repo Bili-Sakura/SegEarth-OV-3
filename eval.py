@@ -5,8 +5,8 @@ import openpyxl
 from mmengine.runner import Runner
 from mmengine.config import Config, DictAction
 
-import segearthov3_segmentor
-import segearthov3_change_detector
+from segearthov3.change_detector import SegEarthOV3CDSeg  # noqa: F401
+from segearthov3.segmentor import SegEarthOV3Segmentation  # noqa: F401
 import custom_datasets
 import custom_transforms
 

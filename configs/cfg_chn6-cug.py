@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import CHN6_CUG
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_chn6-cug.txt',
+    text_prompts=CHN6_CUG,
     prob_thd=0.3,
     confidence_threshold=0.5,
 )

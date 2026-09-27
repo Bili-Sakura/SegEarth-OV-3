@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import WHU
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_whu.txt',
+    text_prompts=WHU,
     prob_thd=0.4,
     confidence_threshold=0.5,
 )

@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import CONTEXT59
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_context59.txt',
+    text_prompts=CONTEXT59,
     confidence_threshold=0.3,
 )
 

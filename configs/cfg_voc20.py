@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import VOC20
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_voc20.txt',
+    text_prompts=VOC20,
     confidence_threshold=0.2,
 )
 

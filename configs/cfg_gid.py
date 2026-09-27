@@ -1,7 +1,9 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import GID
+
 model = dict(
-    classname_path='./configs/cls_gid.txt', 
+    text_prompts=GID, 
     confidence_threshold=0.1,
     prob_thd=0.1
 )

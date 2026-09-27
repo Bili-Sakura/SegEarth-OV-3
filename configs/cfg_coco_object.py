@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import COCO_OBJECT
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_coco_object.txt',
+    text_prompts=COCO_OBJECT,
     prob_thd=0.4,
 )
 

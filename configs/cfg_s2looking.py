@@ -1,9 +1,11 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import S2LOOKING
+
 # model settings
 model = dict(
     type='SegEarthOV3CDSeg',
-    classname_path='./configs/cls_s2looking.txt',  
+    text_prompts=S2LOOKING,  
     prob_thd=0.6,
     confidence_threshold=0.5,
     use_sem_seg=True,  

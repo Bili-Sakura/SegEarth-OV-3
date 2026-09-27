@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import UDD5
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_udd5.txt',
+    text_prompts=UDD5,
     confidence_threshold=0.5,
     prob_thd=0.1,
     bg_idx=4,
