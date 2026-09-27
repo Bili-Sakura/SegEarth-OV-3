@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import VOC21
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_voc21.txt',
+    text_prompts=VOC21,
     prob_thd=0.4,
     confidence_threshold=0.5,
 )

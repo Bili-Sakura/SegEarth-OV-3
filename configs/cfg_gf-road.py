@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import GF_ROAD
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_gf-road.txt',
+    text_prompts=GF_ROAD,
     prob_thd=0.3,
     confidence_threshold=0.1,
 )

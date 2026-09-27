@@ -43,7 +43,18 @@
 
 ## Dependencies and Installation
 
-You only need to focus on installing mmcv and mmsegmentation correctly; other dependencies are not strict.
+SAM 3 is loaded **natively through Hugging Face `transformers`** (`Sam3Model` / `Sam3Processor`). This repo no longer vendors or imports the `facebookresearch/sam3` package.
+
+```bash
+pip install -r requirements.txt
+# Evaluation also needs a working mmcv + mmsegmentation install.
+```
+
+`facebook/sam3` is a gated Hub model. Accept the license on the [model card](https://huggingface.co/facebook/sam3) and authenticate:
+
+```bash
+hf auth login
+```
 
 ## Datasets
 We include the following dataset configurations in this repo: 
@@ -58,20 +69,97 @@ We include the following dataset configurations in this repo:
 For 1) - 4), please refer to [SegEarth-OV/dataset_prepare.md](https://github.com/likyoo/SegEarth-OV/blob/main/dataset_prepare.md) for dataset preparation.  
 For 6) - 8). please refer to [dataset_prepare.md](dataset_prepare.md) for dataset preparation.
 
-## Download checkpoints of SAM 3
+## Load SAM 3
 
-Download checkpoints from [HF](https://huggingface.co/facebook/sam3) or [ModelScope](https://modelscope.cn/models/facebook/sam3).
+The custom inference pipeline downloads and caches `facebook/sam3` via `transformers` on first use. You can also point `model=` at a local snapshot of that Hub repo. A separate `sam3.pt` / BPE file is not required.
+
+## Hugging Face Hub (standard custom pipeline)
+
+The publishable Transformers snapshot is [`hub/`](hub/). That folder is laid out the official way ([Adding a new pipeline](https://huggingface.co/docs/transformers/en/add_new_pipeline)):
+
+```
+hub/pipeline.py   # self-contained transformers.Pipeline (no package imports)
+hub/config.json   # Sam3 config + custom_pipelines + default text_prompts
+hub/README.md     # model card
+```
+
+`config.json` registers the task as:
+
+```json
+"custom_pipelines": {
+  "segearth-ov3-segmentation": {
+    "impl": "pipeline.SegEarthOV3Pipeline",
+    "pt": ["AutoModel"],
+    "type": "image"
+  }
+}
+```
+
+After you upload that snapshot to a model repo (`python scripts/push_to_hub.py --repo-id YOUR_NAMESPACE/SegEarth-OV-3 --code-only` or `--with-weights`):
+
+```python
+from transformers import pipeline
+
+pipe = pipeline(
+    "segearth-ov3-segmentation",
+    model="YOUR_NAMESPACE/SegEarth-OV-3",
+    trust_remote_code=True,
+    text_prompts=["background", "building", "road"],
+)
+result = pipe("image.tif")
+```
+
+`--with-weights` is the official `Pipeline.push_to_hub` path (copies `pipeline.py` next to the SAM 3 checkpoint). `--code-only` uploads just the three files above; pair them with `facebook/sam3` as shown in `hub/README.md`. Pin `revision=` to a commit you have reviewed when using `trust_remote_code=True`. SAM 3 weights stay under the [`facebook/sam3`](https://huggingface.co/facebook/sam3) license.
+
+This GitHub checkout uses the same `hub/pipeline.py` through `from segearthov3 import pipeline`.
 
 ## Quick Inference
+
+The inference API takes a **list of text prompts** (one entry per class). Comma-separated strings or nested lists are synonym groups for the same class — they are queried separately and max-pooled back to one label.
+
+```python
+from segearthov3 import pipeline
+
+pipe = pipeline(
+    model="facebook/sam3",
+    text_prompts=[
+        "background",
+        "bareland,barren",
+        "grass",
+        "road",
+        "car",
+        ["tree", "forest"],
+        "water,river",
+        "cropland",
+        "building,roof,house",
+    ],
+    slide_crop=512,
+    slide_stride=512,
+    prob_thd=0.1,
+    confidence_threshold=0.1,
+)
+
+result = pipe("resources/oem_koeln_50.tif")
+# result["pred_sem_seg"]: [H, W] class ids
+# result["seg_logits"]:   [C, H, W]
+# result["text_prompts"]: class names after synonym grouping
+```
+
+Or run the demo script:
+
 ```
 python demo.py
 ```
+
+Preset evaluation vocabularies live in `segearthov3/vocabularies.py` as Python lists (not `configs/cls_*.txt` files). Override them per call with any custom `text_prompts=[...]`.
 
 ## Model evaluation
 
 ```
 python eval.py ./configs/cfg_DATASET.py
 ```
+
+Each `configs/cfg_*.py` now sets `model.text_prompts` to a list (imported from `segearthov3.vocabularies`).
 
 ## Results
 <div>
@@ -102,5 +190,5 @@ python eval.py ./configs/cfg_DATASET.py
 ```
 
 ## Acknowledgement
-This implementation is based on [SAM 3](https://github.com/facebookresearch/sam3) and [SCLIP](https://github.com/wangf3014/SCLIP). We would also like to thank Xu Zhang for providing the [OmniOVCD](https://github.com/Erxucomeon/OmniOVCD) code, which forms the basis of the OVCD part in this code.
+This implementation uses [Hugging Face Transformers SAM 3](https://huggingface.co/docs/transformers/en/model_doc/sam3) and is based on the [SAM 3](https://github.com/facebookresearch/sam3) paper/model and [SCLIP](https://github.com/wangf3014/SCLIP). We would also like to thank Xu Zhang for providing the [OmniOVCD](https://github.com/Erxucomeon/OmniOVCD) code, which forms the basis of the OVCD part in this code.
 

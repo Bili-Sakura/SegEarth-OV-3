@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import ADE20K
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_ade20k.txt',
+    text_prompts=ADE20K,
     confidence_threshold=0.3,
 )
 

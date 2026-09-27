@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import WBS_SI
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_wbs-si.txt',
+    text_prompts=WBS_SI,
     prob_thd=0.3,
     confidence_threshold=0.3,
 )

@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import INRIA
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_inria.txt',
+    text_prompts=INRIA,
     prob_thd=0.5,
     confidence_threshold=0.5,
 )

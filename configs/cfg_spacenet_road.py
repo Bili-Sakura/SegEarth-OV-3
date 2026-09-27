@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import ROAD
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_roadval.txt',
+    text_prompts=ROAD,
     prob_thd=0.3,
     confidence_threshold=0.3,
 )

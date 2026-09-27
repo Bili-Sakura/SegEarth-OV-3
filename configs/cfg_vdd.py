@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import VDD
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_vdd.txt',
+    text_prompts=VDD,
     prob_thd=0.3,
     confidence_threshold=0.5,
 )

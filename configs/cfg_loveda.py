@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import LOVEDA
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_loveda.txt',
+    text_prompts=LOVEDA,
     confidence_threshold=0.5,
     prob_thd=0.5,
 )

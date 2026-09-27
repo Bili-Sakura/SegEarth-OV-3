@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import OPENEARTHMAP
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_openearthmap.txt',
+    text_prompts=OPENEARTHMAP,
     prob_thd=0.1,
     confidence_threshold=0.1,
     slide_stride=512,

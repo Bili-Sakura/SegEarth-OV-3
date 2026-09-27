@@ -1,9 +1,11 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import LEVIR_CD
+
 # model settings
 model = dict(
     type='SegEarthOV3CDSeg',
-    classname_path='./configs/cls_levir_cd.txt',  
+    text_prompts=LEVIR_CD,  
     prob_thd=0.4,
     confidence_threshold=0.5,
     use_sem_seg=True,  

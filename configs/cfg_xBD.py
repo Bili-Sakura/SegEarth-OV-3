@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import XBD
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_xBD.txt',
+    text_prompts=XBD,
     prob_thd=0.1,
     confidence_threshold=0.1,
 )

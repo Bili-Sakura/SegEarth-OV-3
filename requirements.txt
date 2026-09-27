@@ -1,0 +1,11 @@
+torch>=2.1
+transformers>=4.57.0  # Sam3Model/Sam3Processor; 5.x recommended
+accelerate
+Pillow
+numpy
+matplotlib
+mmengine
+mmcv
+mmsegmentation
+scikit-image
+openpyxl

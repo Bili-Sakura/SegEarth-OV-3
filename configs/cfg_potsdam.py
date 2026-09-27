@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import POTSDAM
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_potsdam.txt',
+    text_prompts=POTSDAM,
     prob_thd=0.1,
     confidence_threshold=0.2,
     bg_idx=5,

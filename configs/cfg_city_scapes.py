@@ -1,8 +1,10 @@
 _base_ = './base_config.py'
 
+from segearthov3.vocabularies import CITYSCAPES
+
 # model settings
 model = dict(
-    classname_path='./configs/cls_city_scapes.txt',
+    text_prompts=CITYSCAPES,
     confidence_threshold=0.3,
 )
 
